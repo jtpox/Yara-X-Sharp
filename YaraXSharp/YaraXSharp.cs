@@ -31,9 +31,6 @@ namespace YaraXSharp
         private Compiler _compiler;
         private Rules _rules;
 
-        /*
-         * TODO: Compiler flags.
-         */
         public YaraX(params YRX_COMPILE_FLAGS[] flags)
         {
             int allFlags = 0;
