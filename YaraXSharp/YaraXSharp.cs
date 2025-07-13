@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using Newtonsoft.Json;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace YaraXSharp
 {
@@ -17,13 +19,16 @@ namespace YaraXSharp
         private static extern YRX_RESULT yrx_compiler_add_source(IntPtr compiler, string src);
 
         [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_errors_json(IntPtr compiler, out YRX_BUFFER buf); // TODO
+        private static extern YRX_RESULT yrx_compiler_errors_json(IntPtr compiler, out IntPtr buf);
 
         [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_warnings_json(IntPtr compiler, out YRX_BUFFER buf); // TODO
+        private static extern YRX_RESULT yrx_compiler_warnings_json(IntPtr compiler, out IntPtr buf);
 
         [DllImport("yara_x_capi.dll")]
         private static extern void yrx_rules_destroy(IntPtr rules);
+
+        [DllImport("yara_x_capi.dll")]
+        private static extern void yrx_buffer_destroy(IntPtr buffer);
 
         [DllImport("yara_x_capi.dll")]
         public static extern int yrx_rules_count(IntPtr rules);
@@ -31,9 +36,6 @@ namespace YaraXSharp
         private Compiler _compiler;
         private Rules _rules;
 
-        /*
-         * TODO: Compiler flags.
-         */
         public YaraX(params YRX_COMPILE_FLAGS[] flags)
         {
             int allFlags = 0;
@@ -65,6 +67,39 @@ namespace YaraXSharp
         public int RulesCount()
         {
             return yrx_rules_count(_rules);
+        }
+
+        public YrxErrorFormat[] Errors()
+        {
+            IntPtr yrx_buffer_pointer;
+            yrx_compiler_errors_json(_compiler, out yrx_buffer_pointer);
+            YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
+            yrx_buffer_destroy(yrx_buffer_pointer);
+            return _GetJsonFromBuffer(yrx_buffer);
+        }
+
+        public YrxErrorFormat[] Warnings()
+        {
+            IntPtr yrx_buffer_pointer;
+            yrx_compiler_warnings_json(_compiler, out yrx_buffer_pointer);
+            YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
+            yrx_buffer_destroy(yrx_buffer_pointer);
+            return _GetJsonFromBuffer(yrx_buffer);
+
+        }
+
+        private YrxErrorFormat[] _GetJsonFromBuffer(YRX_BUFFER yrx_buffer)
+        {
+            if (yrx_buffer.length <= 2)
+            {
+                return Array.Empty<YrxErrorFormat>();
+            }
+
+            byte[] buffer = new byte[yrx_buffer.length];
+            var data = yrx_buffer.data;
+            Marshal.Copy(yrx_buffer.data, buffer, 0, yrx_buffer.length);
+            // Unpredictable behaviour
+            return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer, 0, yrx_buffer.length));
         }
     }
 }
