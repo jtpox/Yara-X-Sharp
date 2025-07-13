@@ -18,7 +18,7 @@ try {
   yara.AddRuleFile("./eicar.yar");
   var rules = yara.Build(); // Compiled rules to be used in Scanner.
 
-  Scanner scanner = new Scanner(rules);
+  Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA);
   scanner.scan("./eicar.txt");
   List<Rule> results = scanner.Results();
 
@@ -41,12 +41,12 @@ try {
 - ~~Compiler flags~~
 - Compiler error and warnings
 - Scanner timeout
-- Iterate matched rule patterns and tags
+- Iterate matched rule patterns ~~and tags~~
 - File streaming for scanning large files
 
 ## Compatibility
 
 | Wrapper Version | Yara-X Release Version |
 |--|--|
-|0.0.1  | [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) |
+|0.0.1, 0.0.2, 0.0.3  | [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) |
 
