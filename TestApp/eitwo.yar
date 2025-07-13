@@ -1,4 +1,4 @@
-﻿rule malw_eicar2  {
+﻿rule malw_eicar2 : malw w32  {
 	
 	meta:
 
