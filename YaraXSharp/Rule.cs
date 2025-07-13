@@ -15,7 +15,7 @@ namespace YaraXSharp
         private static extern IntPtr yrx_rule_iter_metadata(IntPtr rule, YRX_METADATA_CALLBACK callback);
 
         private IntPtr _rule;
-        public Dictionary<string, string> Metadata = new Dictionary<string, string>();
+        public Dictionary<string, object> Metadata = new Dictionary<string, object>();
         public Rule(IntPtr rule)
         {
             _rule = rule;
@@ -35,16 +35,19 @@ namespace YaraXSharp
                     Metadata.Add(data.identifier, Marshal.PtrToStringUTF8(data.value.String));
                     break;
                 case YRX_METADATA_VALUE_TYPE.YRX_BYTES:
-                    Metadata.Add(data.identifier, ""); // TODO
+                    YRX_METADATA_BYTES yrx_buffer = data.value.bytes;
+                    byte[] buffer = new byte[yrx_buffer.length];
+                    Marshal.Copy(yrx_buffer.data, buffer, 0, yrx_buffer.length);
+                    Metadata.Add(data.identifier, buffer);
                     break;
                 case YRX_METADATA_VALUE_TYPE.YRX_F64:
-                    Metadata.Add(data.identifier, $"{data.value.f64}");
+                    Metadata.Add(data.identifier, data.value.f64);
                     break;
                 case YRX_METADATA_VALUE_TYPE.YRX_I64:
-                    Metadata.Add(data.identifier, $"{data.value.i64}");
+                    Metadata.Add(data.identifier, data.value.i64);
                     break;
                 case YRX_METADATA_VALUE_TYPE.YRX_BOOLEAN:
-                    Metadata.Add(data.identifier, $"{data.value.boolean}");
+                    Metadata.Add(data.identifier, data.value.boolean);
                     break;
             }
         }
