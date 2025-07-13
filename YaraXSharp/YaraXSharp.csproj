@@ -4,17 +4,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>0.0.2</AssemblyVersion>
+    <AssemblyVersion>0.0.3</AssemblyVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Yara-X Sharp</Title>
     <Authors>jtPox</Authors>
     <Description>A simple wrapper for Yara-X rule scanning on .NET.</Description>
     <PackageTags>yara,yara-x,yara-scanner,wrapper-api,wrapper-library,wrapper,csharp,net,yara-forensics,yara-x-capi</PackageTags>
-    <FileVersion>0.0.2</FileVersion>
+    <FileVersion>0.0.3</FileVersion>
     <PackageProjectUrl>https://github.com/jtpox/Yara-X-Sharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jtpox/Yara-X-Sharp</RepositoryUrl>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <PackageOutputPath>$(OutputPath)</PackageOutputPath>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
