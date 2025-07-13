@@ -7,9 +7,20 @@ namespace TestApp
         {
             try
             {
-                var yara = new YaraX(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN, YRX_COMPILE_FLAGS.YRX_DISABLE_INCLUDES);
+                var yara = new YaraX();
                 yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
                 yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
+
+                // Error and warning checks have to come before Build.
+                var errors = yara.Errors();
+                if (errors.Length > 0)
+                {
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.text);
+                    }
+                }
+
                 var rules = yara.Build();
 
                 Console.WriteLine($"Number of rules: {yara.RulesCount()}");
@@ -28,7 +39,8 @@ namespace TestApp
                 // Make sure to destroy.
                 scanner.Destroy();
                 yara.Destroy();
-            } catch (YrxException ex)
+            }
+            catch (YrxException ex)
             {
                 Console.Write(ex.Message);
             }
