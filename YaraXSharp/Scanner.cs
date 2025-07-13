@@ -27,10 +27,13 @@ namespace YaraXSharp
         private Rules _rules;
 
         private List<Rule> _rule = new List<Rule>();
+        private YRX_SCANNER_FLAGS[] _load_info;
 
-        public Scanner(Rules rules)
+        public Scanner(Rules rules, params YRX_SCANNER_FLAGS[] load_info)
         {
             _rules = rules;
+            _load_info = load_info;
+
             yrx_scanner_create(_rules, out _scanner);
             yrx_scanner_on_matching_rule(_scanner, OnMatchCallback);
         }
@@ -46,8 +49,7 @@ namespace YaraXSharp
 
         private void OnMatchCallback(IntPtr rule)
         {
-            Rule matchedRule = new Rule(rule);
-            matchedRule.GetMetadata();
+            Rule matchedRule = new Rule(rule, _load_info);
             _rule.Add(matchedRule);
         }
 
