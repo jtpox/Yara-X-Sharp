@@ -39,6 +39,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <TargetPath>%(Filename)%(Extension)</TargetPath>
     </None>
+	  <Content Include="yara_x_capi\1.4.0\yara_x_capi.dll">
+		  <Pack>tTrue</Pack>
+		  <PackagePath>lib\$(TargetFramework)</PackagePath>
+	  </Content>
   </ItemGroup>
 
 </Project>
