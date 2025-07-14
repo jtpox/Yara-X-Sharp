@@ -4,7 +4,7 @@ A simple wrapper for Yara-X around the Yara-X C/C++ API.
 You can find the Nuget package [here](https://www.nuget.org/packages/YaraXSharp).
 
 ## Requirements
-Bring your own `yara_x_capi.dll` which you can find [here](https://github.com/VirusTotal/yara-x/releases).
+For versions 0.0.3 and below, bring your own `yara_x_capi.dll` which you can find [here](https://github.com/VirusTotal/yara-x/releases).
 
 ## Usage
 ```csharp
@@ -42,11 +42,10 @@ try {
 - Compiler error and warnings
 - Scanner timeout
 - Iterate matched rule patterns ~~and tags~~
-- File streaming for scanning large files
+- ~~File streaming for scanning large files~~ [BYO](https://github.com/jtpox/Yara-X-Sharp/commit/596f3b0e6da6989e2936eb0bff213742737865be)
 
 ## Compatibility
-
-| Wrapper Version | Yara-X Release Version |
+| Yara-X Release Version | Wrapper Version |
 |--|--|
-|0.0.1, 0.0.2, 0.0.3  | [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) |
+| [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4 |
 
