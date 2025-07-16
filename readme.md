@@ -48,5 +48,5 @@ try {
 ## Compatibility
 | Yara-X Release Version | Wrapper Version |
 |--|--|
-| [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4 |
+| [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4, 0.0.5 |
 
