@@ -14,14 +14,14 @@ namespace TestApp
 
                 Console.WriteLine($"Number of rules: {yara.RulesCount()}");
 
-                Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA);
-                scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
+                Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS);
                 scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
                 List<Rule> results = scanner.Results();
                 Console.WriteLine($"Matches: {results.Count}");
 
                 foreach (Rule rule in results)
                 {
+                    Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
                     Console.WriteLine(rule.Metadata["malware_family"]);
                 }
 
