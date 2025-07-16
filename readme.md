@@ -18,7 +18,7 @@ try {
   yara.AddRuleFile("./eicar.yar");
   var rules = yara.Build(); // Compiled rules to be used in Scanner.
 
-  Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA);
+  Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS);
   scanner.scan("./eicar.txt");
   List<Rule> results = scanner.Results();
 
