@@ -23,6 +23,7 @@ try {
   List<Rule> results = scanner.Results();
 
   foreach (Rule rule in results) {
+    Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
     Console.WriteLine(rule.Metadata["malware_family"]);
   }
 
@@ -41,7 +42,7 @@ try {
 - ~~Compiler flags~~
 - Compiler error and warnings
 - Scanner timeout
-- Iterate matched rule patterns ~~and tags~~
+- ~~Iterate matched rule patterns and tags~~
 - ~~File streaming for scanning large files~~ [BYO](https://github.com/jtpox/Yara-X-Sharp/commit/596f3b0e6da6989e2936eb0bff213742737865be)
 
 ## Compatibility
