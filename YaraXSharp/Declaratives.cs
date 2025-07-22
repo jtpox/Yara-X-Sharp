@@ -41,7 +41,7 @@ namespace YaraXSharp
     internal struct YRX_BUFFER
     {
         public IntPtr data;
-        public long length;
+        public nuint length;
     }
 
 
@@ -87,6 +87,14 @@ namespace YaraXSharp
     public class YrxException : Exception
     {
         public YrxException(string message) : base(message) { }
+    }
+
+    public class YrxErrorFormat
+    {
+        public required string type { get; set; }
+        public required string code { get; set; }
+        public required string title { get; set; }
+        public required string text { get; set; }
     }
     internal class Declaratives
     {

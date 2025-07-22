@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using Newtonsoft.Json;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace YaraXSharp
 {
@@ -17,13 +19,16 @@ namespace YaraXSharp
         private static extern YRX_RESULT yrx_compiler_add_source(IntPtr compiler, string src);
 
         [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_errors_json(IntPtr compiler, out YRX_BUFFER buf); // TODO
+        private static extern YRX_RESULT yrx_compiler_errors_json(IntPtr compiler, out IntPtr buf);
 
         [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_warnings_json(IntPtr compiler, out YRX_BUFFER buf); // TODO
+        private static extern YRX_RESULT yrx_compiler_warnings_json(IntPtr compiler, out IntPtr buf);
 
         [DllImport("yara_x_capi.dll")]
         private static extern void yrx_rules_destroy(IntPtr rules);
+
+        [DllImport("yara_x_capi.dll")]
+        private static extern void yrx_buffer_destroy(IntPtr buffer);
 
         [DllImport("yara_x_capi.dll")]
         public static extern int yrx_rules_count(IntPtr rules);
@@ -50,20 +55,62 @@ namespace YaraXSharp
         {
             if (!File.Exists(filePath)) throw new YrxException("Rule file does not exist.");
             var result = yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+            // if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
-
-        public Rules Build()
+        public Tuple<IntPtr, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
+            YrxErrorFormat[] errors = _Errors();
+            YrxErrorFormat[] warnings = _Warnings();
+
             _rules = yrx_compiler_build(_compiler);
-            return _rules;
+            return Tuple.Create(_rules, errors, warnings);
         }
 
         public int RulesCount()
         {
             return yrx_rules_count(_rules);
         }
+        
+        private YrxErrorFormat[] _Errors()
+        {
+            IntPtr yrx_buffer_pointer;
+            yrx_compiler_errors_json(_compiler, out yrx_buffer_pointer);
+            YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
+            yrx_buffer_destroy(yrx_buffer_pointer);
+            return _GetJsonFromBuffer(yrx_buffer);
+        }
 
+        private YrxErrorFormat[] _Warnings()
+        {
+            IntPtr yrx_buffer_pointer;
+            yrx_compiler_warnings_json(_compiler, out yrx_buffer_pointer);
+            YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
+            yrx_buffer_destroy(yrx_buffer_pointer);
+            return _GetJsonFromBuffer(yrx_buffer);
+
+        }
+
+        private YrxErrorFormat[] _GetJsonFromBuffer(YRX_BUFFER yrx_buffer)
+        {
+            if (yrx_buffer.length <= 2)
+            {
+                return Array.Empty<YrxErrorFormat>();
+            }
+
+            byte[] buffer = new byte[(int)yrx_buffer.length];
+            var data = yrx_buffer.data;
+            Marshal.Copy(yrx_buffer.data, buffer, 0, (int)yrx_buffer.length);
+            try
+            {
+                // Unpredictable behaviour
+                // https://github.com/jtpox/Yara-X-Sharp/commit/afc33cd67d78df1eb94d90a245936f2203dff17c#commitcomment-162014780
+                return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
+            } catch (JsonException ex)
+            {
+                return new YrxErrorFormat[0];
+            }
+        }
+        
         public void Dispose()
         {
             Destroy();

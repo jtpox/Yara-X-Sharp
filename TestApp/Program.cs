@@ -10,7 +10,11 @@ namespace TestApp
                 /* var yara = new YaraX(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN, YRX_COMPILE_FLAGS.YRX_DISABLE_INCLUDES);
                 yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
                 yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
-                var rules = yara.Build();
+
+                var (rules, errors, warnings) = yara.Build();
+
+                if (errors.Length != 0) _LoopErrorFormat(errors);
+                if (warnings.Length != 0) _LoopErrorFormat(warnings);
 
                 Console.WriteLine($"Number of rules: {yara.RulesCount()}");
 
@@ -23,17 +27,19 @@ namespace TestApp
                 {
                     Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
                     Console.WriteLine(rule.Metadata["malware_family"]);
-                } */
+                }
 
                 // Make sure to destroy.
-                /* scanner.Destroy();
+                scanner.Destroy();
                 yara.Destroy(); */
-
                 using (var yara = new YaraX(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN, YRX_COMPILE_FLAGS.YRX_DISABLE_INCLUDES))
                 {
                     yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
                     yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
-                    var rules = yara.Build();
+                    var (rules, errors, warnings) = yara.Build();
+
+                    if (errors.Length != 0) _LoopErrorFormat(errors);
+                    if (warnings.Length != 0) _LoopErrorFormat(warnings);
 
                     Console.WriteLine($"Number of rules: {yara.RulesCount()}");
 
@@ -50,9 +56,16 @@ namespace TestApp
                         }
                     }
                 }
-            } catch (YrxException ex)
-            {
+            } catch (YrxException ex) {
                 Console.Write(ex.Message);
+            }
+        }
+
+        public static void _LoopErrorFormat(YrxErrorFormat[] errors)
+        {
+            foreach (var error in errors)
+            {
+                Console.WriteLine(error.text);
             }
         }
     }
