@@ -11,17 +11,10 @@ namespace TestApp
                 yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
                 yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
 
-                // Error and warning checks have to come before Build.
-                var errors = yara.Errors();
-                if (errors.Length > 0)
-                {
-                    foreach (var error in errors)
-                    {
-                        Console.WriteLine(error.text);
-                    }
-                }
+                var (rules, errors, warnings) = yara.Build();
 
-                var rules = yara.Build();
+                if (errors.Length != 0) _LoopErrorFormat(errors);
+                if (warnings.Length != 0) _LoopErrorFormat(warnings);
 
                 Console.WriteLine($"Number of rules: {yara.RulesCount()}");
 
@@ -43,6 +36,14 @@ namespace TestApp
             catch (YrxException ex)
             {
                 Console.Write(ex.Message);
+            }
+        }
+
+        public static void _LoopErrorFormat(YrxErrorFormat[] errors)
+        {
+            foreach (var error in errors)
+            {
+                Console.WriteLine(error.text);
             }
         }
     }
