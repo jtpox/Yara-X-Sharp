@@ -106,12 +106,10 @@ namespace YaraXSharp
             byte[] buffer = new byte[(int)yrx_buffer.length];
             var data = yrx_buffer.data;
             Marshal.Copy(yrx_buffer.data, buffer, 0, (int)yrx_buffer.length);
-
-            Console.WriteLine(Marshal.PtrToStringUTF8(yrx_buffer.data, (int)yrx_buffer.length));
-            Console.WriteLine(BitConverter.ToString(buffer));
-            // Unpredictable behaviour
             try
             {
+                // Unpredictable behaviour
+                // https://github.com/jtpox/Yara-X-Sharp/commit/afc33cd67d78df1eb94d90a245936f2203dff17c#commitcomment-162014780
                 return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
             } catch (JsonException ex)
             {
