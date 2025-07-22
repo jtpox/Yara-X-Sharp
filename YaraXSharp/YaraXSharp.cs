@@ -55,13 +55,21 @@ namespace YaraXSharp
         {
             if (!File.Exists(filePath)) throw new YrxException("Rule file does not exist.");
             var result = yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+            // if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
-        public Rules Build()
+        /* public Rules Build()
         {
             _rules = yrx_compiler_build(_compiler);
             return _rules;
+        } */
+        public Tuple<IntPtr, YrxErrorFormat[], YrxErrorFormat[]> Build()
+        {
+            var errors = _Errors();
+            var warnings = _Warnings();
+
+            _rules = yrx_compiler_build(_compiler);
+            return Tuple.Create(_rules, errors, warnings);
         }
 
         public int RulesCount()
@@ -69,7 +77,7 @@ namespace YaraXSharp
             return yrx_rules_count(_rules);
         }
 
-        public YrxErrorFormat[] Errors()
+        private YrxErrorFormat[] _Errors()
         {
             IntPtr yrx_buffer_pointer;
             yrx_compiler_errors_json(_compiler, out yrx_buffer_pointer);
@@ -78,7 +86,7 @@ namespace YaraXSharp
             return _GetJsonFromBuffer(yrx_buffer);
         }
 
-        public YrxErrorFormat[] Warnings()
+        private YrxErrorFormat[] _Warnings()
         {
             IntPtr yrx_buffer_pointer;
             yrx_compiler_warnings_json(_compiler, out yrx_buffer_pointer);
@@ -95,11 +103,20 @@ namespace YaraXSharp
                 return Array.Empty<YrxErrorFormat>();
             }
 
-            byte[] buffer = new byte[yrx_buffer.length];
+            byte[] buffer = new byte[(int)yrx_buffer.length];
             var data = yrx_buffer.data;
-            Marshal.Copy(yrx_buffer.data, buffer, 0, yrx_buffer.length);
+            Marshal.Copy(yrx_buffer.data, buffer, 0, (int)yrx_buffer.length);
+
+            Console.WriteLine(Marshal.PtrToStringUTF8(yrx_buffer.data, (int)yrx_buffer.length));
+            Console.WriteLine(BitConverter.ToString(buffer));
             // Unpredictable behaviour
-            return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer, 0, yrx_buffer.length));
+            try
+            {
+                return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
+            } catch (JsonException ex)
+            {
+                return new YrxErrorFormat[0];
+            }
         }
     }
 }

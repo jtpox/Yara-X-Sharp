@@ -35,7 +35,7 @@ namespace YaraXSharp
     internal struct YRX_BUFFER
     {
         public IntPtr data;
-        public int length;
+        public nuint length;
     }
 
 
