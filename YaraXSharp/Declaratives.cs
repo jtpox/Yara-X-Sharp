@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 
 namespace YaraXSharp
 {
+    public enum YRX_SCANNER_FLAGS
+    {
+        LOAD_METADATA,
+        LOAD_TAGS,
+        LOAD_PATTERNS,
+    }
     public enum YRX_COMPILE_FLAGS
     {
         YRX_COLORIZE_ERRORS = 1,

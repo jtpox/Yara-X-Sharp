@@ -4,7 +4,7 @@ A simple wrapper for Yara-X around the Yara-X C/C++ API.
 You can find the Nuget package [here](https://www.nuget.org/packages/YaraXSharp).
 
 ## Requirements
-Bring your own `yara_x_capi.dll` which you can find [here](https://github.com/VirusTotal/yara-x/releases).
+For versions 0.0.3 and below, bring your own `yara_x_capi.dll` which you can find [here](https://github.com/VirusTotal/yara-x/releases).
 
 ## Usage
 ```csharp
@@ -18,17 +18,48 @@ try {
   yara.AddRuleFile("./eicar.yar");
   var rules = yara.Build(); // Compiled rules to be used in Scanner.
 
-  Scanner scanner = new Scanner(rules);
+  Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS);
   scanner.scan("./eicar.txt");
   List<Rule> results = scanner.Results();
 
   foreach (Rule rule in results) {
+    Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
     Console.WriteLine(rule.Metadata["malware_family"]);
   }
 
   // Make sure to destroy.
   scanner.Destroy();
   yara.Destroy();
+} catch (YrxException ex) {
+  Console.WriteLine(ex.Message);
+}
+```
+
+Or 
+
+```csharp
+try {
+  using (var yara = new YaraX())
+  {
+    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
+    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
+    var rules = yara.Build();
+
+    Console.WriteLine($"Number of rules: {yara.RulesCount()}");
+
+    using (Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS))
+    {
+        scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
+        List<Rule> results = scanner.Results();
+        Console.WriteLine($"Matches: {results.Count}");
+
+        foreach (Rule rule in results)
+        {
+            Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
+            Console.WriteLine(rule.Metadata["malware_family"]);
+        }
+    }
+  }
 } catch (YrxException ex) {
   Console.WriteLine(ex.Message);
 }
@@ -41,12 +72,11 @@ try {
 - ~~Compiler flags~~
 - Compiler error and warnings
 - Scanner timeout
-- Iterate matched rule patterns and tags
-- File streaming for scanning large files
+- ~~Iterate matched rule patterns and tags~~
+- ~~File streaming for scanning large files~~ [BYO](https://github.com/jtpox/Yara-X-Sharp/commit/596f3b0e6da6989e2936eb0bff213742737865be)
 
 ## Compatibility
-
-| Wrapper Version | Yara-X Release Version |
+| Yara-X Release Version | Wrapper Version |
 |--|--|
-|0.0.1  | [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) |
+| [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4, 0.0.5 |
 

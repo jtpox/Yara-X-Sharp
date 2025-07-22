@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace YaraXSharp
 {
-    public class Scanner
+    public class Scanner : IDisposable
     {
         private delegate void YRX_RULE_CALLBACK(IntPtr rule);
 
@@ -26,11 +26,14 @@ namespace YaraXSharp
         private IntPtr _scanner;
         private Rules _rules;
 
-        private List<Rule> _rule = new List<Rule>();
+        private List<Rule> _matchedRules = new List<Rule>();
+        private YRX_SCANNER_FLAGS[] _load_info;
 
-        public Scanner(Rules rules)
+        public Scanner(Rules rules, params YRX_SCANNER_FLAGS[] load_info)
         {
             _rules = rules;
+            _load_info = load_info;
+
             yrx_scanner_create(_rules, out _scanner);
             yrx_scanner_on_matching_rule(_scanner, OnMatchCallback);
         }
@@ -38,27 +41,38 @@ namespace YaraXSharp
         public void Scan(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("File does not exist.");
-            // TODO: Streaming for large files.
             byte[] file = File.ReadAllBytes(filePath);
             var result = yrx_scanner_scan(_scanner, file, file.Length);
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
+        // Implement your own large file stream!
+        public void Scan(byte[] fileBuffer)
+        {
+            if (fileBuffer.Length == 0) throw new YrxException("File buffer length is zero.");
+            var result = yrx_scanner_scan(_scanner, fileBuffer, fileBuffer.Length);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
         private void OnMatchCallback(IntPtr rule)
         {
-            Rule matchedRule = new Rule(rule);
-            matchedRule.GetMetadata();
-            _rule.Add(matchedRule);
+            Rule matchedRule = new Rule(rule, _load_info);
+            _matchedRules.Add(matchedRule);
         }
 
         public List<Rule> Results()
         {
-            return _rule;
+            return _matchedRules;
         }
 
         public void Destroy()
         {
             yrx_scanner_destroy(_scanner);
+        }
+
+        public void Dispose()
+        {
+            Destroy();
         }
     }
 }
