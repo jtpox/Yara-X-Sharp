@@ -57,16 +57,10 @@ namespace YaraXSharp
             var result = yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
             // if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
-
-        /* public Rules Build()
-        {
-            _rules = yrx_compiler_build(_compiler);
-            return _rules;
-        } */
         public Tuple<IntPtr, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
-            var errors = _Errors();
-            var warnings = _Warnings();
+            YrxErrorFormat[] errors = _Errors();
+            YrxErrorFormat[] warnings = _Warnings();
 
             _rules = yrx_compiler_build(_compiler);
             return Tuple.Create(_rules, errors, warnings);
