@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace YaraXSharp
 {
-    public class Scanner
+    public class Scanner : IDisposable
     {
         private delegate void YRX_RULE_CALLBACK(IntPtr rule);
 
@@ -68,6 +68,11 @@ namespace YaraXSharp
         public void Destroy()
         {
             yrx_scanner_destroy(_scanner);
+        }
+
+        public void Dispose()
+        {
+            Destroy();
         }
     }
 }

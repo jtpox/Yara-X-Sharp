@@ -2,7 +2,7 @@
 
 namespace YaraXSharp
 {
-    public class YaraX
+    public class YaraX : IDisposable
     {
         [DllImport("yara_x_capi.dll")]
         private static extern YRX_RESULT yrx_compiler_create(int flags, out IntPtr compiler);
@@ -28,8 +28,8 @@ namespace YaraXSharp
         [DllImport("yara_x_capi.dll")]
         public static extern int yrx_rules_count(IntPtr rules);
 
-        private Compiler _compiler;
-        private Rules _rules;
+        private Compiler _compiler = 0;
+        private Rules _rules = 0;
 
         public YaraX(params YRX_COMPILE_FLAGS[] flags)
         {
@@ -42,8 +42,8 @@ namespace YaraXSharp
 
         public void Destroy()
         {
-            yrx_rules_destroy(_rules);
-            yrx_compiler_destroy(_compiler);
+            if (_rules != 0) yrx_rules_destroy(_rules);
+            if (_compiler != 0) yrx_compiler_destroy(_compiler);
         }
 
         public void AddRuleFile(string filePath)
@@ -62,6 +62,11 @@ namespace YaraXSharp
         public int RulesCount()
         {
             return yrx_rules_count(_rules);
+        }
+
+        public void Dispose()
+        {
+            Destroy();
         }
     }
 }
