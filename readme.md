@@ -8,60 +8,52 @@ For versions 0.0.3 and below, bring your own `yara_x_capi.dll` which you can fin
 
 ## Usage
 ```csharp
-try {
-  /*
-   * New Compiler instance.
-   * You can pass multiple params from YRX_COMPILE_FLAGS.
-   * E.g. new YaraX(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN)
-   */
-  var yara = new YaraX();
-  yara.AddRuleFile("./eicar.yar");
-  var (rules, errors, warnings) = yara.Build(); // Compiled rules to be used in Scanner.
+/*
+ * New Compiler instance.
+ * You can pass multiple params from YRX_COMPILE_FLAGS.
+ * E.g. new YaraX(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN)
+ */
+var yara = new YaraX();
+yara.AddRuleFile("./eicar.yar");
+var (rules, errors, warnings) = yara.Build(); // Compiled rules to be used in Scanner.
 
-  Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS);
-  scanner.scan("./eicar.txt");
-  List<Rule> results = scanner.Results();
+Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS);
+scanner.scan("./eicar.txt");
+List<Rule> results = scanner.Results();
 
-  foreach (Rule rule in results) {
-    Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
-    Console.WriteLine(rule.Metadata["malware_family"]);
-  }
-
-  // Make sure to destroy.
-  scanner.Destroy();
-  yara.Destroy();
-} catch (YrxException ex) {
-  Console.WriteLine(ex.Message);
+foreach (Rule rule in results) {
+  Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
+  Console.WriteLine(rule.Metadata["malware_family"]);
 }
+
+// Make sure to destroy.
+scanner.Destroy();
+yara.Destroy();
 ```
 
 Or 
 
 ```csharp
-try {
-  using (var yara = new YaraX())
+using (var yara = new YaraX())
+{
+  yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
+  yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
+  var (rules, errors, warnings) = yara.Build();
+
+  Console.WriteLine($"Number of rules: {yara.RulesCount()}");
+
+  using (Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS))
   {
-    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
-    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
-    var (rules, errors, warnings) = yara.Build();
+      scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
+      List<Rule> results = scanner.Results();
+      Console.WriteLine($"Matches: {results.Count}");
 
-    Console.WriteLine($"Number of rules: {yara.RulesCount()}");
-
-    using (Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS))
-    {
-        scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
-        List<Rule> results = scanner.Results();
-        Console.WriteLine($"Matches: {results.Count}");
-
-        foreach (Rule rule in results)
-        {
-            Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
-            Console.WriteLine(rule.Metadata["malware_family"]);
-        }
-    }
+      foreach (Rule rule in results)
+      {
+          Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
+          Console.WriteLine(rule.Metadata["malware_family"]);
+      }
   }
-} catch (YrxException ex) {
-  Console.WriteLine(ex.Message);
 }
 ```
 
