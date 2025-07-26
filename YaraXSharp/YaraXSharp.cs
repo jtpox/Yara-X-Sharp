@@ -31,10 +31,10 @@ namespace YaraXSharp
         private static extern void yrx_buffer_destroy(IntPtr buffer);
 
         [DllImport("yara_x_capi.dll")]
-        public static extern int yrx_rules_count(IntPtr rules);
+        private static extern int yrx_rules_count(IntPtr rules);
 
-        private Compiler _compiler = 0;
-        private Rules _rules = 0;
+        private Compiler _compiler = IntPtr.Zero;
+        private Rules _rules = IntPtr.Zero;
 
         public YaraX(params YRX_COMPILE_FLAGS[] flags)
         {
@@ -47,8 +47,8 @@ namespace YaraXSharp
 
         public void Destroy()
         {
-            if (_rules != 0) yrx_rules_destroy(_rules);
-            if (_compiler != 0) yrx_compiler_destroy(_compiler);
+            if (_rules != IntPtr.Zero) yrx_rules_destroy(_rules);
+            if (_compiler != IntPtr.Zero) yrx_compiler_destroy(_compiler);
         }
 
         public void AddRuleFile(string filePath)
@@ -92,10 +92,7 @@ namespace YaraXSharp
 
         private YrxErrorFormat[] _GetJsonFromBuffer(YRX_BUFFER yrx_buffer)
         {
-            if (yrx_buffer.length <= 2)
-            {
-                return Array.Empty<YrxErrorFormat>();
-            }
+            if (yrx_buffer.length <= 2) return Array.Empty<YrxErrorFormat>();
 
             byte[] buffer = new byte[(int)yrx_buffer.length];
             var data = yrx_buffer.data;
@@ -107,7 +104,7 @@ namespace YaraXSharp
                 return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
             } catch (JsonException ex)
             {
-                return new YrxErrorFormat[0];
+                return Array.Empty<YrxErrorFormat>();
             }
         }
         
