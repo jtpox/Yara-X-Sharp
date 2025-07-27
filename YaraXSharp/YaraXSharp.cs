@@ -49,6 +49,9 @@ namespace YaraXSharp
         {
             if (_rules != IntPtr.Zero) yrx_rules_destroy(_rules);
             if (_compiler != IntPtr.Zero) yrx_compiler_destroy(_compiler);
+
+            _compiler = IntPtr.Zero;
+            _rules = IntPtr.Zero;
         }
 
         public void AddRuleFile(string filePath)
