@@ -9,24 +9,10 @@ namespace YaraXSharp
 {
     public class Scanner : IDisposable
     {
-        private delegate void YRX_RULE_CALLBACK(IntPtr rule);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_scanner_create(IntPtr rules, out IntPtr scanner);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern void yrx_scanner_destroy(IntPtr scanner);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_scanner_scan(IntPtr scanner, byte[] data, long len);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_scanner_on_matching_rule(IntPtr scanner, YRX_RULE_CALLBACK callback);
-
         private IntPtr _scanner;
         private Rules _rules;
 
-        private List<Rule> _matchedRules = new List<Rule>();
+        private List<Match> _matchedRules = new List<Match>();
         private YRX_SCANNER_FLAGS[] _load_info;
 
         public Scanner(Rules rules, params YRX_SCANNER_FLAGS[] load_info)
@@ -34,15 +20,15 @@ namespace YaraXSharp
             _rules = rules;
             _load_info = load_info;
 
-            yrx_scanner_create(_rules, out _scanner);
-            yrx_scanner_on_matching_rule(_scanner, OnMatchCallback);
+            YaraX.yrx_scanner_create(_rules._pointer, out _scanner);
+            YaraX.yrx_scanner_on_matching_rule(_scanner, OnMatchCallback);
         }
 
         public void Scan(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("File does not exist.");
             byte[] file = File.ReadAllBytes(filePath);
-            var result = yrx_scanner_scan(_scanner, file, file.Length);
+            var result = YaraX.yrx_scanner_scan(_scanner, file, file.Length);
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
@@ -50,24 +36,24 @@ namespace YaraXSharp
         public void Scan(byte[] fileBuffer)
         {
             if (fileBuffer.Length == 0) throw new YrxException("File buffer length is zero.");
-            var result = yrx_scanner_scan(_scanner, fileBuffer, fileBuffer.Length);
+            var result = YaraX.yrx_scanner_scan(_scanner, fileBuffer, fileBuffer.Length);
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
         private void OnMatchCallback(IntPtr rule)
         {
-            Rule matchedRule = new Rule(rule, _load_info);
+            Match matchedRule = new Match(rule, _load_info);
             _matchedRules.Add(matchedRule);
         }
 
-        public List<Rule> Results()
+        public List<Match> Results()
         {
             return _matchedRules;
         }
 
         public void Destroy()
         {
-            yrx_scanner_destroy(_scanner);
+            YaraX.yrx_scanner_destroy(_scanner);
         }
 
         public void Dispose()
