@@ -11,17 +11,17 @@ For versions 0.0.3 and below, bring your own `yara_x_capi.dll` which you can fin
 /*
  * New Compiler instance.
  * You can pass multiple params from YRX_COMPILE_FLAGS.
- * E.g. new YaraX(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN)
+ * E.g. new Compiler(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN)
  */
-var yara = new YaraX();
+var yara = new Compiler();
 yara.AddRuleFile("./eicar.yar");
 var (rules, errors, warnings) = yara.Build(); // Compiled rules to be used in Scanner.
 
 Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS);
 scanner.scan("./eicar.txt");
-List<Rule> results = scanner.Results();
+List<Match> results = scanner.Results();
 
-foreach (Rule rule in results) {
+foreach (Match rule in results) {
   Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
   Console.WriteLine(rule.Metadata["malware_family"]);
 }
@@ -34,21 +34,21 @@ yara.Destroy();
 Or 
 
 ```csharp
-using (var yara = new YaraX())
+using (var yara = new Compiler())
 {
   yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
   yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
   var (rules, errors, warnings) = yara.Build();
 
-  Console.WriteLine($"Number of rules: {yara.RulesCount()}");
+  Console.WriteLine($"Number of rules: {rules.Count()}");
 
   using (Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS))
   {
       scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
-      List<Rule> results = scanner.Results();
+      List<Match> results = scanner.Results();
       Console.WriteLine($"Matches: {results.Count}");
 
-      foreach (Rule rule in results)
+      foreach (Match rule in results)
       {
           Console.WriteLine($"Pattern match count: {rule.Patterns.Count}");
           Console.WriteLine(rule.Metadata["malware_family"]);
