@@ -96,6 +96,9 @@ namespace YaraXSharp
         public static extern YRX_RESULT yrx_compiler_add_source(IntPtr compiler, string src);
 
         [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_compiler_add_source_with_origin(IntPtr compiler, string src, string origin);
+
+        [DllImport("yara_x_capi.dll")]
         public static extern YRX_RESULT yrx_compiler_errors_json(IntPtr compiler, out IntPtr buf);
 
         [DllImport("yara_x_capi.dll")]

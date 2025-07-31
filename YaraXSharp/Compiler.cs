@@ -30,7 +30,8 @@ namespace YaraXSharp
         public void AddRuleFile(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("Rule file does not exist.");
-            var result = YaraX.yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
+            // var result = YaraX.yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
+            YaraX.yrx_compiler_add_source_with_origin(_compiler, File.ReadAllText(filePath), filePath);
             // if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
