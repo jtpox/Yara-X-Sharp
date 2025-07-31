@@ -22,6 +22,7 @@ namespace TestApp
 
                     using (Scanner scanner = new Scanner(rules, YRX_SCANNER_FLAGS.LOAD_METADATA, YRX_SCANNER_FLAGS.LOAD_PATTERNS))
                     {
+                        scanner.SetTimeout(3);
                         scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
                         List<Match> results = scanner.Results();
                         Console.WriteLine($"Matches: {results.Count}");
