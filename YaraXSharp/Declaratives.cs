@@ -12,6 +12,8 @@ namespace YaraXSharp
         LOAD_METADATA,
         LOAD_TAGS,
         LOAD_PATTERNS,
+        LOAD_NAMESPACE,
+        LOAD_IDENTIFIER,
     }
 
     public class YrxException : Exception
