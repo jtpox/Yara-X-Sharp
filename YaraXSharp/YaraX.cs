@@ -181,5 +181,16 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi.dll")]
         public static extern YRX_RESULT yrx_scanner_on_matching_rule(IntPtr scanner, YRX_RULE_CALLBACK callback);
+
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_scanner_set_global_str(IntPtr compiler, string identifier, string value);
+
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_scanner_set_global_bool(IntPtr compiler, string identifier, bool value);
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_scanner_set_global_int(IntPtr compiler, string identifier, int value);
+
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_scanner_set_global_float(IntPtr compiler, string identifier, double value);
     }
 }
