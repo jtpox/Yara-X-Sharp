@@ -104,6 +104,12 @@ namespace YaraXSharp
         [DllImport("yara_x_capi.dll")]
         public static extern YRX_RESULT yrx_compiler_warnings_json(IntPtr compiler, out IntPtr buf);
 
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_compiler_ignore_module(IntPtr compiler, string module);
+
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_compiler_ban_module(IntPtr compiler, string module, string error_title, string error_msg);
+
         /*
          * Rule Functions
          */
