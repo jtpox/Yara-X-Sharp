@@ -126,6 +126,12 @@ namespace YaraXSharp
         [DllImport("yara_x_capi.dll")]
         public static extern YRX_RESULT yrx_pattern_identifier(IntPtr pattern, out IntPtr identifier, out int length);
 
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_rules_serialize(IntPtr rules, out IntPtr buf);
+
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_rules_deserialize(byte[] data, long len, out IntPtr rules);
+
         /*
          * Scanner Functions
          */
