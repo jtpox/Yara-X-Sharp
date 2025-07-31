@@ -138,6 +138,9 @@ namespace YaraXSharp
         public delegate void YRX_RULE_CALLBACK(IntPtr rule);
 
         [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_scanner_set_timeout(IntPtr scanner, long timeout);
+
+        [DllImport("yara_x_capi.dll")]
         public static extern YRX_RESULT yrx_scanner_create(IntPtr rules, out IntPtr scanner);
 
         [DllImport("yara_x_capi.dll")]
