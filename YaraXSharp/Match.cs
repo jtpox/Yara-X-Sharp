@@ -7,49 +7,56 @@ using System.Threading.Tasks;
 
 namespace YaraXSharp
 {
-    public class Rule
+    public class Match
     {
-        private delegate void YRX_METADATA_CALLBACK(IntPtr metadata);
-        private delegate void YRX_TAGS_CALLBACK(IntPtr tag);
-        private delegate void YRX_PATTERN_CALLBACK(IntPtr pattern);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern IntPtr yrx_rule_iter_metadata(IntPtr rule, YRX_METADATA_CALLBACK callback);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern IntPtr yrx_rule_iter_tags(IntPtr rule, YRX_TAGS_CALLBACK callback);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern IntPtr yrx_rule_iter_patterns(IntPtr rule, YRX_PATTERN_CALLBACK callback);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_pattern_identifier(IntPtr pattern, out IntPtr identifier, out int length);
 
         private IntPtr _rule;
         public Dictionary<string, object> Metadata = new Dictionary<string, object>();
         public List<string> Tags = new List<string>();
         public List<string> Patterns = new List<string>();
-        public Rule(IntPtr rule, params YRX_SCANNER_FLAGS[] load_info)
+        public string Namespace = null;
+        public string Identifier = null;
+        public Match(IntPtr rule, params YRX_SCANNER_FLAGS[] load_info)
         {
             _rule = rule;
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_METADATA)) GetMetadata();
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_TAGS)) GetTags();
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_PATTERNS)) GetPatterns();
+            if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_NAMESPACE)) GetNamespace();
+            if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_IDENTIFIER)) GetIdentifier();
         }
 
         private void GetMetadata()
         {
-            yrx_rule_iter_metadata(_rule, MetadataCallback);
+            YaraX.yrx_rule_iter_metadata(_rule, MetadataCallback);
         }
 
         private void GetTags()
         {
-            yrx_rule_iter_tags(_rule, TagsCallback);
+            YaraX.yrx_rule_iter_tags(_rule, TagsCallback);
         }
 
         private void GetPatterns()
         {
-            yrx_rule_iter_patterns(_rule, PatternsCallback);
+            YaraX.yrx_rule_iter_patterns(_rule, PatternsCallback);
+        }
+
+        private void GetNamespace()
+        {
+            IntPtr pointer;
+            int length;
+            YaraX.yrx_rule_namespace(_rule, out pointer, out length);
+            if (length == 0) return;
+            Namespace = Marshal.PtrToStringUTF8(pointer, length);
+        }
+
+        private void GetIdentifier()
+        {
+            IntPtr pointer;
+            int length;
+            YaraX.yrx_rule_identifier(_rule, out pointer, out length);
+            if (length == 0) return;
+            Identifier = Marshal.PtrToStringUTF8(pointer, length);
         }
 
         private void MetadataCallback(IntPtr metadata)
@@ -87,7 +94,7 @@ namespace YaraXSharp
         {
             IntPtr identifier;
             int length;
-            yrx_pattern_identifier(pattern, out identifier, out length);
+            YaraX.yrx_pattern_identifier(pattern, out identifier, out length);
 
             if (length == 0) return;
 

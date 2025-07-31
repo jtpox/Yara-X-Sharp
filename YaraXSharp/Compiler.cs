@@ -4,91 +4,60 @@ using System.Text;
 
 namespace YaraXSharp
 {
-    public class YaraX : IDisposable
+    public class Compiler : IDisposable
     {
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_create(int flags, out IntPtr compiler);
+        internal IntPtr _compiler = IntPtr.Zero;
+        internal Rules? _rules = null;
 
-        [DllImport("yara_x_capi.dll")]
-        private static extern void yrx_compiler_destroy(IntPtr compiler);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern IntPtr yrx_compiler_build(IntPtr compiler);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_add_source(IntPtr compiler, string src);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_errors_json(IntPtr compiler, out IntPtr buf);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern YRX_RESULT yrx_compiler_warnings_json(IntPtr compiler, out IntPtr buf);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern void yrx_rules_destroy(IntPtr rules);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern void yrx_buffer_destroy(IntPtr buffer);
-
-        [DllImport("yara_x_capi.dll")]
-        private static extern int yrx_rules_count(IntPtr rules);
-
-        private Compiler _compiler = IntPtr.Zero;
-        private Rules _rules = IntPtr.Zero;
-
-        public YaraX(params YRX_COMPILE_FLAGS[] flags)
+        public Compiler(params YRX_COMPILE_FLAGS[] flags)
         {
             int allFlags = 0;
             foreach (var flag in flags) allFlags += (int)flag;
 
-            var compiler = yrx_compiler_create(allFlags, out _compiler);
+            var compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
             if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException(compiler.ToString());
         }
 
         public void Destroy()
         {
-            if (_rules != IntPtr.Zero) yrx_rules_destroy(_rules);
-            if (_compiler != IntPtr.Zero) yrx_compiler_destroy(_compiler);
+            if (_rules != null) _rules.Destroy();
+            if (_compiler != IntPtr.Zero) YaraX.yrx_compiler_destroy(_compiler);
 
             _compiler = IntPtr.Zero;
-            _rules = IntPtr.Zero;
+            _rules = null;
         }
 
         public void AddRuleFile(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("Rule file does not exist.");
-            var result = yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
+            // var result = YaraX.yrx_compiler_add_source(_compiler, File.ReadAllText(filePath));
+            YaraX.yrx_compiler_add_source_with_origin(_compiler, File.ReadAllText(filePath), filePath);
             // if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
-        public Tuple<IntPtr, YrxErrorFormat[], YrxErrorFormat[]> Build()
+        public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
             YrxErrorFormat[] errors = _Errors();
             YrxErrorFormat[] warnings = _Warnings();
 
-            _rules = yrx_compiler_build(_compiler);
+            IntPtr rules = YaraX.yrx_compiler_build(_compiler);
+            _rules = new Rules(rules);
             return Tuple.Create(_rules, errors, warnings);
         }
-
-        public int RulesCount()
-        {
-            return yrx_rules_count(_rules);
-        }
-        
         private YrxErrorFormat[] _Errors()
         {
             IntPtr yrx_buffer_pointer;
-            yrx_compiler_errors_json(_compiler, out yrx_buffer_pointer);
+            YaraX.yrx_compiler_errors_json(_compiler, out yrx_buffer_pointer);
             YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
-            yrx_buffer_destroy(yrx_buffer_pointer);
+            YaraX.yrx_buffer_destroy(yrx_buffer_pointer);
             return _GetJsonFromBuffer(yrx_buffer);
         }
 
         private YrxErrorFormat[] _Warnings()
         {
             IntPtr yrx_buffer_pointer;
-            yrx_compiler_warnings_json(_compiler, out yrx_buffer_pointer);
+            YaraX.yrx_compiler_warnings_json(_compiler, out yrx_buffer_pointer);
             YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
-            yrx_buffer_destroy(yrx_buffer_pointer);
+            YaraX.yrx_buffer_destroy(yrx_buffer_pointer);
             return _GetJsonFromBuffer(yrx_buffer);
 
         }
