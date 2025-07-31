@@ -63,12 +63,12 @@ using (var yara = new Compiler())
 ## To-Dos
 - ~~Compiler flags~~
 - ~~Compiler error and warnings~~ [Unpredictable behavior](https://github.com/jtpox/Yara-X-Sharp/commit/afc33cd67d78df1eb94d90a245936f2203dff17c#commitcomment-162014780)
-- Scanner timeout
+- ~~Scanner timeout~~
 - ~~Iterate matched rule patterns and tags~~
 - ~~File streaming for scanning large files~~ [BYO](https://github.com/jtpox/Yara-X-Sharp/commit/596f3b0e6da6989e2936eb0bff213742737865be)
 
 ## Compatibility
 | Yara-X Release Version | Wrapper Version |
 |--|--|
-| [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4, 0.0.5, 0.1.0 |
+| [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4, 0.0.5, 0.1.0, [1.0.0](https://github.com/jtpox/Yara-X-Sharp/pull/4) |
 
