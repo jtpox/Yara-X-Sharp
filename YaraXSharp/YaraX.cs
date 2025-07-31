@@ -135,12 +135,16 @@ namespace YaraXSharp
         public static extern int yrx_rules_count(IntPtr rules);
 
         public delegate void YRX_RULE_CALLBACK(IntPtr rule);
+        public delegate void YRX_IMPORTS_CALLBACK(string module_name);
         public delegate void YRX_METADATA_CALLBACK(IntPtr metadata);
         public delegate void YRX_TAGS_CALLBACK(IntPtr tag);
         public delegate void YRX_PATTERN_CALLBACK(IntPtr pattern);
 
         [DllImport("yara_x_capi.dll")]
         public static extern YRX_RESULT yrx_rules_iter(IntPtr rules, YRX_RULE_CALLBACK callback);
+
+        [DllImport("yara_x_capi.dll")]
+        public static extern YRX_RESULT yrx_rules_iter_imports(IntPtr rules, YRX_IMPORTS_CALLBACK callback);
 
         [DllImport("yara_x_capi.dll")]
         public static extern IntPtr yrx_rule_iter_metadata(IntPtr rule, YRX_METADATA_CALLBACK callback);
