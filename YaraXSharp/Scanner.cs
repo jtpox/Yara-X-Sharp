@@ -24,6 +24,12 @@ namespace YaraXSharp
             YaraX.yrx_scanner_on_matching_rule(_scanner, OnMatchCallback);
         }
 
+        public void SetTimeout(int seconds)
+        {
+            YRX_RESULT result = YaraX.yrx_scanner_set_timeout(_scanner, seconds);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
         public void Scan(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("File does not exist.");
