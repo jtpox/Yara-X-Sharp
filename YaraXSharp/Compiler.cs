@@ -48,8 +48,10 @@ namespace YaraXSharp
             IntPtr yrx_buffer_pointer;
             YaraX.yrx_compiler_errors_json(_compiler, out yrx_buffer_pointer);
             YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
+            YrxErrorFormat[] jsonData = _GetJsonFromBuffer(yrx_buffer);
+
             YaraX.yrx_buffer_destroy(yrx_buffer_pointer);
-            return _GetJsonFromBuffer(yrx_buffer);
+            return jsonData;
         }
 
         private YrxErrorFormat[] _Warnings()
@@ -57,8 +59,10 @@ namespace YaraXSharp
             IntPtr yrx_buffer_pointer;
             YaraX.yrx_compiler_warnings_json(_compiler, out yrx_buffer_pointer);
             YRX_BUFFER yrx_buffer = Marshal.PtrToStructure<YRX_BUFFER>(yrx_buffer_pointer);
+            YrxErrorFormat[] jsonData = _GetJsonFromBuffer(yrx_buffer);
+
             YaraX.yrx_buffer_destroy(yrx_buffer_pointer);
-            return _GetJsonFromBuffer(yrx_buffer);
+            return jsonData;
 
         }
 
@@ -71,8 +75,6 @@ namespace YaraXSharp
             Marshal.Copy(yrx_buffer.data, buffer, 0, (int)yrx_buffer.length);
             try
             {
-                // Unpredictable behaviour
-                // https://github.com/jtpox/Yara-X-Sharp/commit/afc33cd67d78df1eb94d90a245936f2203dff17c#commitcomment-162014780
                 return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
             } catch (JsonException ex)
             {
