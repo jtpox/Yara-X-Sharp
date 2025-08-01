@@ -62,7 +62,7 @@ using (var yara = new Compiler())
 
 ## To-Dos
 - ~~Compiler flags~~
-- ~~Compiler error and warnings~~ [Unpredictable behavior](https://github.com/jtpox/Yara-X-Sharp/commit/afc33cd67d78df1eb94d90a245936f2203dff17c#commitcomment-162014780)
+- ~~Compiler error and warnings~~
 - ~~Scanner timeout~~
 - ~~Iterate matched rule patterns and tags~~
 - ~~File streaming for scanning large files~~ [BYO](https://github.com/jtpox/Yara-X-Sharp/commit/596f3b0e6da6989e2936eb0bff213742737865be)
