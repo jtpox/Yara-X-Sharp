@@ -11,4 +11,13 @@
     <ProjectReference Include="..\YaraXSharp\YaraXSharp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="eicar.yar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="eitwo.yar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

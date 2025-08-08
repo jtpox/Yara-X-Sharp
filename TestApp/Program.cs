@@ -11,8 +11,8 @@ namespace TestApp
                 Console.WriteLine("Test 1");
                 using (Compiler yara = new Compiler(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN, YRX_COMPILE_FLAGS.YRX_DISABLE_INCLUDES))
                 {
-                    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
-                    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
+                    yara.AddRuleFile("./eicar.yar");
+                    yara.AddRuleFile("./eitwo.yar");
                     var (rules, errors, warnings) = yara.Build();
 
                     if (errors.Length != 0) _LoopErrorFormat(errors);
@@ -50,8 +50,8 @@ namespace TestApp
                 if (File.Exists("./ydb.dat")) File.Delete("./ydb.dat");
                 using (Compiler yara = new Compiler(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN, YRX_COMPILE_FLAGS.YRX_DISABLE_INCLUDES))
                 {
-                    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eicar.yar"));
-                    yara.AddRuleFile(Path.Combine(Environment.CurrentDirectory, "../../../", "eitwo.yar"));
+                    yara.AddRuleFile("./eicar.yar");
+                    yara.AddRuleFile("./eitwo.yar");
                     var (rules, errors, warnings) = yara.Build();
 
                     if (errors.Length != 0) _LoopErrorFormat(errors);
