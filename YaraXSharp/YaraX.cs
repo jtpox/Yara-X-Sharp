@@ -84,7 +84,7 @@ namespace YaraXSharp
          * Compiler Functions
          */
         [DllImport("yara_x_capi")]
-        public static extern YRX_RESULT yrx_compiler_create(int flags, out IntPtr compiler);
+        public static extern YRX_RESULT yrx_compiler_create(uint flags, out IntPtr compiler);
 
         [DllImport("yara_x_capi")]
         public static extern void yrx_compiler_destroy(IntPtr compiler);

@@ -11,8 +11,8 @@ namespace YaraXSharp
 
         public Compiler(params YRX_COMPILE_FLAGS[] flags)
         {
-            int allFlags = 0;
-            foreach (var flag in flags) allFlags += (int)flag;
+            uint allFlags = 0;
+            foreach (var flag in flags) allFlags |= (uint)flag;
 
             var compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
             if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException(compiler.ToString());
