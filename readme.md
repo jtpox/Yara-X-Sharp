@@ -6,7 +6,7 @@ You can find the Nuget package [here](https://www.nuget.org/packages/YaraXSharp)
 ## Requirements
 As of 1.0.2, `Windows x86_64` and `Linux x86_64` version of Yara X CAPI is included in the Nuget package.
 
-If you are on Apple silicon or want to bring your own `yara_x_capi.dll` which you can follow the compile guide [here](https://github.com/jtpox/Yara-X-Sharp/wiki/Bring-your-own-Yara%E2%80%90X-C-C---API).
+If you are on Apple silicon or want to bring your own `yara_x_capi.dll`, you can follow the compile guide [here](https://github.com/jtpox/Yara-X-Sharp/wiki/Bring-your-own-Yara%E2%80%90X-C-C---API).
 
 ## Usage
 ```csharp
