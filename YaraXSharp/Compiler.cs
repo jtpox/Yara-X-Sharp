@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 
 namespace YaraXSharp
 {
@@ -11,8 +11,8 @@ namespace YaraXSharp
 
         public Compiler(params YRX_COMPILE_FLAGS[] flags)
         {
-            int allFlags = 0;
-            foreach (var flag in flags) allFlags += (int)flag;
+            uint allFlags = 0;
+            foreach (var flag in flags) allFlags |= (uint)flag;
 
             var compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
             if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException(compiler.ToString());
@@ -75,8 +75,15 @@ namespace YaraXSharp
             Marshal.Copy(yrx_buffer.data, buffer, 0, (int)yrx_buffer.length);
             try
             {
-                return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
-            } catch (JsonException ex)
+                // return JsonConvert.DeserializeObject<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
+                var deserializedJson = JsonSerializer.Deserialize<YrxErrorFormat[]>(Encoding.UTF8.GetString(buffer));
+                if (deserializedJson == null)
+                {
+                    return Array.Empty<YrxErrorFormat>();
+                }
+
+                return deserializedJson;
+            } catch (Exception ex)
             {
                 return Array.Empty<YrxErrorFormat>();
             }

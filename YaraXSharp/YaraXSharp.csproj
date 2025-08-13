@@ -1,52 +1,64 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Yara-X Sharp</Title>
-    <Authors>jtPox</Authors>
-    <Description>A simple wrapper for Yara-X rule scanning on .NET.</Description>
-    <PackageTags>yara,yara-x,yara-scanner,wrapper-api,wrapper-library,wrapper,csharp,net,yara-forensics,yara-x-capi</PackageTags>
-    <FileVersion>1.0.1</FileVersion>
-    <PackageProjectUrl>https://github.com/jtpox/Yara-X-Sharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/jtpox/Yara-X-Sharp</RepositoryUrl>
-    <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <Version>1.0.1</Version>
-    <PackageOutputPath>$(OutputPath)</PackageOutputPath>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AssemblyVersion>1.0.2</AssemblyVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Yara-X Sharp</Title>
+		<Authors>jtPox</Authors>
+		<Description>A simple wrapper for Yara-X rule scanning on .NET.</Description>
+		<PackageTags>yara,yara-x,yara-scanner,wrapper-api,wrapper-library,wrapper,csharp,net,yara-forensics,yara-x-capi</PackageTags>
+		<FileVersion>1.0.2</FileVersion>
+		<PackageProjectUrl>https://github.com/jtpox/Yara-X-Sharp</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/jtpox/Yara-X-Sharp</RepositoryUrl>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<Version>1.0.2</Version>
+		<PackageOutputPath>$(OutputPath)</PackageOutputPath>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\readme.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\readme.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="yara_x_capi\1.4.0\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="yara_x_capi\1.4.0\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="yara_x_capi\1.4.0\yara_x_capi.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <TargetPath>%(Filename)%(Extension)</TargetPath>
-    </None>
-	  <Content Include="yara_x_capi\1.4.0\yara_x_capi.dll">
-		  <Pack>True</Pack>
-		  <PackagePath>lib\$(TargetFramework)</PackagePath>
-	  </Content>
-  </ItemGroup>
-   
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="yara_x_capi\1.4.0\yara_x_capi.dll">
+			<!-- Windows x64 CAPI -->
+			<Pack>True</Pack>
+			<!-- <PackagePath>lib\$(TargetFramework)</PackagePath> -->
+			<PackagePath>runtimes\win-x64\native</PackagePath>
+		</Content>
+		<Content Include="yara_x_capi\1.4.0\libyara_x_capi.so">
+			<!-- Linux x64 CAPI -->
+			<Pack>True</Pack>
+			<PackagePath>runtimes\linux-x64\native</PackagePath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="yara_x_capi\1.4.0\yara_x_capi.dll">
+			<!-- Windows x64 CAPI -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+		</None>
+		<None Update="yara_x_capi\1.4.0\libyara_x_capi.so">
+			<!-- Linux x64 CAPI -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+		</None>
+	</ItemGroup>
 
 </Project>
