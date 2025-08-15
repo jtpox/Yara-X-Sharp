@@ -10,9 +10,14 @@ namespace YaraXSharp
     public class Rules : IDisposable
     {
         internal IntPtr _pointer = IntPtr.Zero;
-        public Rules(IntPtr rulesPtr = default)
+        internal Rules(IntPtr rulesPtr)
         {
             _pointer = rulesPtr;
+        }
+
+        public Rules()
+        {
+            _pointer = IntPtr.Zero;
         }
 
         public int Count()
