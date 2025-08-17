@@ -60,6 +60,7 @@ namespace YaraXSharp
         public void Destroy()
         {
             YaraX.yrx_scanner_destroy(_scanner);
+            _scanner = IntPtr.Zero;
         }
 
         public void Dispose()
