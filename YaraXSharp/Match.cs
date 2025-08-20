@@ -16,7 +16,7 @@ namespace YaraXSharp
         public List<string> Patterns = new List<string>();
         public string Namespace = null;
         public string Identifier = null;
-        public Match(IntPtr rule, params YRX_SCANNER_FLAGS[] load_info)
+        internal Match(IntPtr rule, params YRX_SCANNER_FLAGS[] load_info)
         {
             _rule = rule;
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_METADATA)) GetMetadata();

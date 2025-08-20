@@ -62,15 +62,9 @@ using (var yara = new Compiler())
 ## Reference
 - [Yara-X C/C++ API Documentation](https://virustotal.github.io/yara-x/docs/api/c/c-/)
 
-## To-Dos
-- ~~Compiler flags~~
-- ~~Compiler error and warnings~~
-- ~~Scanner timeout~~
-- ~~Iterate matched rule patterns and tags~~
-- ~~File streaming for scanning large files~~ [BYO](https://github.com/jtpox/Yara-X-Sharp/commit/596f3b0e6da6989e2936eb0bff213742737865be)
-
 ## Compatibility
 | Yara-X Release Version | Wrapper Version |
 |--|--|
 | [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4, 0.0.5, 0.1.0, [1.0.0](https://github.com/jtpox/Yara-X-Sharp/pull/4) |
+| [1.5.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.5.0) | 1.0.3
 

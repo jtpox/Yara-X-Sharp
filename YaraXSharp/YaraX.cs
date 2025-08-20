@@ -125,6 +125,9 @@ namespace YaraXSharp
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_compiler_define_global_float(IntPtr compiler, string identifier, double value);
 
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_compiler_add_include_dir(IntPtr compiler, string dir);
+
 
         /*
          * Rule Functions

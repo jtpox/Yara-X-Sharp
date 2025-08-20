@@ -34,6 +34,13 @@ namespace YaraXSharp
             YaraX.yrx_compiler_add_source_with_origin(_compiler, File.ReadAllText(filePath), filePath);
             // if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
+
+        public void AddIncludeDir(string directory)
+        {
+            var result = YaraX.yrx_compiler_add_include_dir(_compiler, directory);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
             YrxErrorFormat[] errors = _Errors();
