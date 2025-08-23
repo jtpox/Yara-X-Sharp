@@ -16,14 +16,28 @@ namespace YaraXSharp
         public List<string> Patterns = new List<string>();
         public string Namespace = null;
         public string Identifier = null;
+
         internal Match(IntPtr rule, params YRX_SCANNER_FLAGS[] load_info)
         {
             _rule = rule;
-            if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_METADATA)) GetMetadata();
+
+            /* if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_METADATA)) GetMetadata();
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_TAGS)) GetTags();
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_PATTERNS)) GetPatterns();
             if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_NAMESPACE)) GetNamespace();
-            if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_IDENTIFIER)) GetIdentifier();
+            if (load_info.Contains(YRX_SCANNER_FLAGS.LOAD_IDENTIFIER)) GetIdentifier(); */
+            Dictionary<YRX_SCANNER_FLAGS, Action> _flagActions = new(){
+                { YRX_SCANNER_FLAGS.LOAD_METADATA, GetMetadata },
+                { YRX_SCANNER_FLAGS.LOAD_TAGS, GetTags },
+                { YRX_SCANNER_FLAGS.LOAD_PATTERNS, GetPatterns },
+                { YRX_SCANNER_FLAGS.LOAD_NAMESPACE, GetNamespace },
+                { YRX_SCANNER_FLAGS.LOAD_IDENTIFIER, GetIdentifier },
+            };
+
+            foreach (var action in _flagActions)
+            {
+                if (load_info.Contains(action.Key)) action.Value();
+            }
         }
 
         private void GetMetadata()
