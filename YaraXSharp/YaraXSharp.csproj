@@ -4,17 +4,17 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<AssemblyVersion>1.0.3</AssemblyVersion>
+		<AssemblyVersion>1.0.3.160</AssemblyVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Yara-X Sharp</Title>
 		<Authors>jtPox</Authors>
 		<Description>A simple wrapper for Yara-X pattern matching on .NET.</Description>
 		<PackageTags>yara,yara-x,yara-scanner,wrapper-api,wrapper-library,wrapper,csharp,net,yara-forensics,yara-x-capi</PackageTags>
-		<FileVersion>1.0.3</FileVersion>
+		<FileVersion>1.0.3.160</FileVersion>
 		<PackageProjectUrl>https://github.com/jtpox/Yara-X-Sharp</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/jtpox/Yara-X-Sharp</RepositoryUrl>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
-		<Version>1.0.3</Version>
+		<Version>1.0.3.160</Version>
 		<PackageOutputPath>$(OutputPath)</PackageOutputPath>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
@@ -33,16 +33,17 @@
 	<ItemGroup>
 		<Folder Include="yara_x_capi\1.4.0\" />
 		<Folder Include="yara_x_capi\1.5.0\" />
+		<Folder Include="yara_x_capi\1.6.0\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="yara_x_capi\1.5.0\yara_x_capi.dll">
+		<Content Include="yara_x_capi\1.6.0\yara_x_capi.dll">
 			<!-- Windows x64 CAPI -->
 			<Pack>True</Pack>
 			<!-- <PackagePath>lib\$(TargetFramework)</PackagePath> -->
 			<PackagePath>runtimes\win-x64\native</PackagePath>
 		</Content>
-		<Content Include="yara_x_capi\1.5.0\libyara_x_capi.so">
+		<Content Include="yara_x_capi\1.6.0\libyara_x_capi.so">
 			<!-- Linux x64 CAPI -->
 			<Pack>True</Pack>
 			<PackagePath>runtimes\linux-x64\native</PackagePath>
@@ -50,12 +51,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="yara_x_capi\1.5.0\yara_x_capi.dll">
+		<None Update="yara_x_capi\1.6.0\yara_x_capi.dll">
 			<!-- Windows x64 CAPI -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>%(Filename)%(Extension)</TargetPath>
 		</None>
-		<None Update="yara_x_capi\1.5.0\libyara_x_capi.so">
+		<None Update="yara_x_capi\1.6.0\libyara_x_capi.so">
 			<!-- Linux x64 CAPI -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>%(Filename)%(Extension)</TargetPath>

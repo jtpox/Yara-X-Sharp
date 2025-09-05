@@ -63,8 +63,11 @@ using (var yara = new Compiler())
 - [Yara-X C/C++ API Documentation](https://virustotal.github.io/yara-x/docs/api/c/c-/)
 
 ## Compatibility
+Any suffix after the initial `x.x.x` for example `1.0.3.160` signifies that it is compatible with the associated Yara-X version (in this case v1.6.0) as well as the CAPI being bundled in Nuget.
+
 | Yara-X Release Version | Wrapper Version |
 |--|--|
 | [1.4.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.4.0) | 0.0.1, 0.0.2, 0.0.3, 0.0.4, 0.0.5, 0.1.0, [1.0.0](https://github.com/jtpox/Yara-X-Sharp/pull/4) |
 | [1.5.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.5.0) | 1.0.3
+| [1.6.0](https://github.com/VirusTotal/yara-x/releases/tag/v1.6.0) | 1.0.3
 
