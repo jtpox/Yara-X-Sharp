@@ -41,6 +41,13 @@ namespace YaraXSharp
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
+        public void IgnoreModule(string module)
+        {
+            var result = YaraX.yrx_compiler_ignore_module(_compiler, module);
+            Console.WriteLine(result.ToString());
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
             YrxErrorFormat[] errors = _Errors();
