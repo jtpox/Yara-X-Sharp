@@ -14,8 +14,8 @@ namespace YaraXSharp
             uint allFlags = 0;
             foreach (var flag in flags) allFlags |= (uint)flag;
 
-            var compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
-            if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException(compiler.ToString());
+            YRX_RESULT compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
+            if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"Compiler: ${compiler.ToString()}");
         }
 
         public void Destroy()
@@ -37,7 +37,39 @@ namespace YaraXSharp
 
         public void AddIncludeDir(string directory)
         {
-            var result = YaraX.yrx_compiler_add_include_dir(_compiler, directory);
+            YRX_RESULT result = YaraX.yrx_compiler_add_include_dir(_compiler, directory);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
+        public void IgnoreModule(string module)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_ignore_module(_compiler, module);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
+        public void BanModule(string module, string errorTitle, string errorMessage)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_ban_module(_compiler, module, errorTitle, errorMessage);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
+        public void NewNamespace(string name)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_new_namespace(_compiler, name);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
+        public void DefineGlobal<T>(string identity, T value)
+        {
+            YRX_RESULT result = value switch
+            {
+                string s => YaraX.yrx_compiler_define_global_str( _compiler, identity, s),
+                bool b => YaraX.yrx_compiler_define_global_bool(_compiler, identity, b),
+                int i => YaraX.yrx_compiler_define_global_int(_compiler, identity, i),
+                double d => YaraX.yrx_compiler_define_global_float(_compiler, identity, d),
+                _ => throw new NotSupportedException($"Unsupported type {typeof(T).Name}"),
+            };
+
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
