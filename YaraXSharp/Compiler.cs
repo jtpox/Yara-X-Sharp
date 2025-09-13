@@ -53,6 +53,12 @@ namespace YaraXSharp
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"BanModule: {result.ToString()}");
         }
 
+        public void NewNamespace(string name)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_new_namespace(_compiler, name);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"NewNamespace: {result.ToString()}");
+        }
+
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
             YrxErrorFormat[] errors = _Errors();
