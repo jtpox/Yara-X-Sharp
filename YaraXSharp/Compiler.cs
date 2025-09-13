@@ -59,6 +59,30 @@ namespace YaraXSharp
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"NewNamespace: {result.ToString()}");
         }
 
+        public void DefineGlobal(string identity, string value)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_define_global_str(_compiler, identity, value);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
+        }
+
+        public void DefineGlobal(string identity, bool value)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_define_global_bool(_compiler, identity, value);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
+        }
+
+        public void DefineGlobal(string identity, int value)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_define_global_int(_compiler, identity, value);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
+        }
+
+        public void DefineGlobal(string identity, double value)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_define_global_float(_compiler, identity, value);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
+        }
+
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
         {
             YrxErrorFormat[] errors = _Errors();
