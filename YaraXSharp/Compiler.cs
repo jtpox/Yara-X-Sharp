@@ -59,27 +59,17 @@ namespace YaraXSharp
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"NewNamespace: {result.ToString()}");
         }
 
-        public void DefineGlobal(string identity, string value)
+        public void DefineGlobal<T>(string identity, T value)
         {
-            YRX_RESULT result = YaraX.yrx_compiler_define_global_str(_compiler, identity, value);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
-        }
+            YRX_RESULT result = value switch
+            {
+                string s => YaraX.yrx_compiler_define_global_str( _compiler, identity, s),
+                bool b => YaraX.yrx_compiler_define_global_bool(_compiler, identity, b),
+                int i => YaraX.yrx_compiler_define_global_int(_compiler, identity, i),
+                double d => YaraX.yrx_compiler_define_global_float(_compiler, identity, d),
+                _ => throw new NotSupportedException($"Unsupported type {typeof(T).Name}"),
+            };
 
-        public void DefineGlobal(string identity, bool value)
-        {
-            YRX_RESULT result = YaraX.yrx_compiler_define_global_bool(_compiler, identity, value);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
-        }
-
-        public void DefineGlobal(string identity, int value)
-        {
-            YRX_RESULT result = YaraX.yrx_compiler_define_global_int(_compiler, identity, value);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
-        }
-
-        public void DefineGlobal(string identity, double value)
-        {
-            YRX_RESULT result = YaraX.yrx_compiler_define_global_float(_compiler, identity, value);
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
         }
 

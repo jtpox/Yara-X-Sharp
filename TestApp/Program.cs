@@ -13,6 +13,7 @@ namespace TestApp
                 {
                     yara.IgnoreModule("console");
                     yara.BanModule("console", "Console", "Console is banned");
+                    yara.DefineGlobal("foo", "bar");
 
                     yara.AddRuleFile("./eicar.yar");
                     yara.AddRuleFile("./eitwo.yar");
