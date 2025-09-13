@@ -14,8 +14,8 @@ namespace YaraXSharp
             uint allFlags = 0;
             foreach (var flag in flags) allFlags |= (uint)flag;
 
-            var compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
-            if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException(compiler.ToString());
+            YRX_RESULT compiler = YaraX.yrx_compiler_create(allFlags, out _compiler);
+            if (compiler != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"Compiler: ${compiler.ToString()}");
         }
 
         public void Destroy()
@@ -37,15 +37,20 @@ namespace YaraXSharp
 
         public void AddIncludeDir(string directory)
         {
-            var result = YaraX.yrx_compiler_add_include_dir(_compiler, directory);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+            YRX_RESULT result = YaraX.yrx_compiler_add_include_dir(_compiler, directory);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"AddIncludeDir: {result.ToString()}");
         }
 
         public void IgnoreModule(string module)
         {
-            var result = YaraX.yrx_compiler_ignore_module(_compiler, module);
-            Console.WriteLine(result.ToString());
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+            YRX_RESULT result = YaraX.yrx_compiler_ignore_module(_compiler, module);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"IgnoreModule: {result.ToString()}");
+        }
+
+        public void BanModule(string module, string errorTitle, string errorMessage)
+        {
+            YRX_RESULT result = YaraX.yrx_compiler_ban_module(_compiler, module, errorTitle, errorMessage);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"BanModule: {result.ToString()}");
         }
 
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()

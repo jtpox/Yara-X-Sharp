@@ -12,6 +12,7 @@ namespace TestApp
                 using (Compiler yara = new Compiler(YRX_COMPILE_FLAGS.YRX_ERROR_ON_SLOW_PATTERN, YRX_COMPILE_FLAGS.YRX_DISABLE_INCLUDES))
                 {
                     yara.IgnoreModule("console");
+                    yara.BanModule("console", "Console", "Console is banned");
 
                     yara.AddRuleFile("./eicar.yar");
                     yara.AddRuleFile("./eitwo.yar");
