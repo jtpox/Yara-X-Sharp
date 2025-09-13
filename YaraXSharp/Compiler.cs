@@ -38,25 +38,25 @@ namespace YaraXSharp
         public void AddIncludeDir(string directory)
         {
             YRX_RESULT result = YaraX.yrx_compiler_add_include_dir(_compiler, directory);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"AddIncludeDir: {result.ToString()}");
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
         public void IgnoreModule(string module)
         {
             YRX_RESULT result = YaraX.yrx_compiler_ignore_module(_compiler, module);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"IgnoreModule: {result.ToString()}");
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
         public void BanModule(string module, string errorTitle, string errorMessage)
         {
             YRX_RESULT result = YaraX.yrx_compiler_ban_module(_compiler, module, errorTitle, errorMessage);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"BanModule: {result.ToString()}");
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
         public void NewNamespace(string name)
         {
             YRX_RESULT result = YaraX.yrx_compiler_new_namespace(_compiler, name);
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"NewNamespace: {result.ToString()}");
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
         public void DefineGlobal<T>(string identity, T value)
@@ -70,7 +70,7 @@ namespace YaraXSharp
                 _ => throw new NotSupportedException($"Unsupported type {typeof(T).Name}"),
             };
 
-            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException($"DefineGlobal: {result.ToString()}");
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
         public Tuple<Rules, YrxErrorFormat[], YrxErrorFormat[]> Build()
