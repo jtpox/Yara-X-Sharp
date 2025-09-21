@@ -19,15 +19,16 @@ namespace YaraXSharp
 
     public enum YRX_RESULT
     {
-        YRX_SUCCESS = 0,
-        YRX_SYNTAX_ERROR = 1,
-        YRX_VARIABLE_ERROR = 3,
-        YRX_SCAN_ERROR = 4,
-        YRX_SCAN_TIMEOUT = 5,
-        YRX_INVALID_ARGUMENT = 6,
-        YRX_INVALID_UTF8 = 7,
-        YRX_SERIALIZATION_ERROR = 8,
-        YRX_NO_METADATA = 9,
+        YRX_SUCCESS,
+        YRX_SYNTAX_ERROR,
+        YRX_VARIABLE_ERROR,
+        YRX_SCAN_ERROR,
+        YRX_SCAN_TIMEOUT,
+        YRX_INVALID_ARGUMENT,
+        YRX_INVALID_UTF8,
+        YRX_SERIALIZATION_ERROR,
+        YRX_NO_METADATA,
+        YRX_NOT_SUPPORTED,
     }
 
     public struct YRX_BUFFER
@@ -177,6 +178,8 @@ namespace YaraXSharp
         /*
          * Scanner Functions
          */
+        public delegate void YRX_SLOWEST_RULES_CALLBACK(string nameSpace, string ruleName, double matchTime, double evalTime);
+
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_timeout(IntPtr scanner, long timeout);
 
@@ -193,6 +196,9 @@ namespace YaraXSharp
         public static extern YRX_RESULT yrx_scanner_on_matching_rule(IntPtr scanner, YRX_RULE_CALLBACK callback);
 
         [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_iter_slowest_rules(IntPtr scanner, uint maxResults, YRX_SLOWEST_RULES_CALLBACK callback);
+
+        [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_global_str(IntPtr compiler, string identifier, string value);
 
         [DllImport("yara_x_capi")]
@@ -202,5 +208,8 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_global_float(IntPtr compiler, string identifier, double value);
+
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_clear_profiling_data(IntPtr scanner);
     }
 }

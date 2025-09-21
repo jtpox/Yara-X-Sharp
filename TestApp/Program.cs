@@ -17,6 +17,7 @@ namespace TestApp
 
                     yara.AddRuleFile("./eicar.yar");
                     yara.AddRuleFile("./eitwo.yar");
+                    yara.AddRuleFile("./slowrule.yar");
                     var (rules, errors, warnings) = yara.Build();
 
                     if (errors.Length != 0) _LoopErrorFormat(errors);

@@ -16,6 +16,14 @@ namespace YaraXSharp
         LOAD_IDENTIFIER,
     }
 
+    public class SlowestRules
+    {
+        public string Namespace;
+        public string Rule;
+        public double MatchTime;
+        public double EvalTime;
+    }
+
     public class YrxException : Exception
     {
         public YrxException(string message) : base(message) { }
