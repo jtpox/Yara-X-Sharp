@@ -203,6 +203,7 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_global_bool(IntPtr compiler, string identifier, bool value);
+
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_global_int(IntPtr compiler, string identifier, int value);
 
