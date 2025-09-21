@@ -177,6 +177,8 @@ namespace YaraXSharp
         /*
          * Scanner Functions
          */
+        public delegate void YRX_SLOWEST_RULES_CALLBACK(string nameSpace, string ruleName, double matchTime, double evalTime);
+
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_timeout(IntPtr scanner, long timeout);
 
@@ -191,6 +193,9 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_on_matching_rule(IntPtr scanner, YRX_RULE_CALLBACK callback);
+
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_iter_slowest_rules(IntPtr scanner, uint maxResults, YRX_SLOWEST_RULES_CALLBACK callback);
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_global_str(IntPtr compiler, string identifier, string value);

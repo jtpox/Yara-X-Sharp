@@ -30,6 +30,24 @@ namespace YaraXSharp
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
+        public List<SlowestRules> GetSlowestRules(uint maxResults)
+        {
+            List<SlowestRules> slowestRules = new List<SlowestRules>();
+            YRX_RESULT result = YaraX.yrx_scanner_iter_slowest_rules(_scanner, maxResults, (string nameSpace, string ruleName, double matchTime, double evalTime) =>
+            {
+                slowestRules.Add(new SlowestRules
+                {
+                    Namespace = nameSpace,
+                    Rule = ruleName,
+                    MatchTime = matchTime,
+                    EvalTime = evalTime,
+                });
+            });
+
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+            return slowestRules;
+        }
+
         public void Scan(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("File does not exist.");
