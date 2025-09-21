@@ -75,6 +75,12 @@ namespace YaraXSharp
             return _matchedRules;
         }
 
+        public void ClearProfilingData()
+        {
+            YRX_RESULT result = YaraX.yrx_scanner_clear_profiling_data(_scanner);
+            if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
+        }
+
         public void Destroy()
         {
             YaraX.yrx_scanner_destroy(_scanner);
