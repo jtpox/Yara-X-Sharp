@@ -211,5 +211,11 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_clear_profiling_data(IntPtr scanner);
+
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_set_module_output(IntPtr scanner, string name, byte data, uint length);
+
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_set_module_data(IntPtr scanner, string name, byte data, uint length);
     }
 }
