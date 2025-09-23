@@ -1,5 +1,5 @@
 # Yara-X Sharp
-A simple wrapper for Yara-X around the Yara-X C/C++ API.
+A simple wrapper using interop for Yara-X around the Yara-X C/C++ API.
 
 You can find the Nuget package [here](https://www.nuget.org/packages/YaraXSharp).
 
