@@ -26,6 +26,7 @@ namespace YaraXSharp
         YRX_SCAN_TIMEOUT,
         YRX_INVALID_ARGUMENT,
         YRX_INVALID_UTF8,
+        YRX_INVALID_STATE,
         YRX_SERIALIZATION_ERROR,
         YRX_NO_METADATA,
         YRX_NOT_SUPPORTED,
@@ -209,7 +210,7 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_global_float(IntPtr compiler, string identifier, double value);
-
+        
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_clear_profiling_data(IntPtr scanner);
 
@@ -218,5 +219,11 @@ namespace YaraXSharp
 
         [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_set_module_data(IntPtr scanner, string name, byte data, uint length);
+
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_scan_block(IntPtr scanner, uint block_number, byte[] data, uint len);
+
+        [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_finish(IntPtr scanner);
     }
 }
