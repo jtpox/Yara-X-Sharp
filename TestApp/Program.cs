@@ -88,7 +88,7 @@ namespace TestApp
                     ))
                     {
                         scanner.SetTimeout(3);
-                        scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"));
+                        scanner.Scan(Path.Combine(Environment.CurrentDirectory, "eicar.txt"), 8);
                         List<Match> results = scanner.Results();
                         Console.WriteLine($"Matches: {results.Count}");
 

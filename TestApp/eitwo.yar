@@ -14,8 +14,8 @@
 
 	strings:
 
-		$s1 = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*" fullword ascii
+		$s1 = "STANDA" fullword ascii
 
 	condition:
-		console.log("eicar2") and any of them
+		any of them
 }
