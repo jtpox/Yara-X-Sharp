@@ -64,6 +64,28 @@ namespace YaraXSharp
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
+        public void Scan(string filePath, int blockLength)
+        {
+            if (!File.Exists(filePath)) throw new YrxException("File does not exist.");
+            using (FileStream fileSource = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                long offset = 0;
+                do
+                {
+                    fileSource.Seek(offset, SeekOrigin.Begin);
+                    byte[] bytes = new byte[blockLength];
+                    int bytesRead = fileSource.Read(bytes, 0, blockLength);
+                    offset += bytesRead;
+                    int block = (int)(offset / (int)blockLength);
+                    YRX_RESULT blockScan = YaraX.yrx_scanner_scan_block(_scanner, (uint)block, bytes, (uint)blockLength);
+                    if (blockScan != YRX_RESULT.YRX_SUCCESS) throw new YrxException(blockScan.ToString());
+                } while (offset < fileSource.Length);
+
+                YRX_RESULT finalizeBlockScan = YaraX.yrx_scanner_finish(_scanner);
+                if (finalizeBlockScan != YRX_RESULT.YRX_SUCCESS) throw new YrxException(finalizeBlockScan.ToString());
+            }
+        }
+
         private void OnMatchCallback(IntPtr rule)
         {
             Match matchedRule = new Match(rule, _load_info);
