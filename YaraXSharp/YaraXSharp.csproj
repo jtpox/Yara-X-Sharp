@@ -36,16 +36,17 @@
 		<Folder Include="yara_x_capi\1.6.0\" />
 		<Folder Include="yara_x_capi\1.7.0\" />
 		<Folder Include="yara_x_capi\1.8.1\" />
+		<Folder Include="yara_x_capi\1.9.0\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="yara_x_capi\1.8.1\yara_x_capi.dll">
+		<Content Include="yara_x_capi\1.9.0\yara_x_capi.dll">
 			<!-- Windows x64 CAPI -->
 			<Pack>True</Pack>
 			<!-- <PackagePath>lib\$(TargetFramework)</PackagePath> -->
 			<PackagePath>runtimes\win-x64\native</PackagePath>
 		</Content>
-		<Content Include="yara_x_capi\1.8.1\libyara_x_capi.so">
+		<Content Include="yara_x_capi\1.9.0\libyara_x_capi.so">
 			<!-- Linux x64 CAPI -->
 			<Pack>True</Pack>
 			<PackagePath>runtimes\linux-x64\native</PackagePath>
@@ -53,12 +54,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="yara_x_capi\1.8.1\yara_x_capi.dll">
+		<None Update="yara_x_capi\1.9.0\yara_x_capi.dll">
 			<!-- Windows x64 CAPI -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>%(Filename)%(Extension)</TargetPath>
 		</None>
-		<None Update="yara_x_capi\1.8.1\libyara_x_capi.so">
+		<None Update="yara_x_capi\1.9.0\libyara_x_capi.so">
 			<!-- Linux x64 CAPI -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>%(Filename)%(Extension)</TargetPath>
