@@ -51,8 +51,7 @@ namespace YaraXSharp
         public void Scan(string filePath)
         {
             if (!File.Exists(filePath)) throw new YrxException("File does not exist.");
-            byte[] file = File.ReadAllBytes(filePath);
-            var result = YaraX.yrx_scanner_scan(_scanner, file, file.Length);
+            YRX_RESULT result = result = YaraX.yrx_scanner_scan_file(_scanner, filePath);
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
@@ -60,7 +59,7 @@ namespace YaraXSharp
         public void Scan(byte[] fileBuffer)
         {
             if (fileBuffer.Length == 0) throw new YrxException("File buffer length is zero.");
-            var result = YaraX.yrx_scanner_scan(_scanner, fileBuffer, fileBuffer.Length);
+            YRX_RESULT result = YaraX.yrx_scanner_scan(_scanner, fileBuffer, fileBuffer.Length);
             if (result != YRX_RESULT.YRX_SUCCESS) throw new YrxException(result.ToString());
         }
 
