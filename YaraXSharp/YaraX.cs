@@ -194,6 +194,9 @@ namespace YaraXSharp
         public static extern YRX_RESULT yrx_scanner_scan(IntPtr scanner, byte[] data, long len);
 
         [DllImport("yara_x_capi")]
+        public static extern YRX_RESULT yrx_scanner_scan_file(IntPtr scanner, string path);
+
+        [DllImport("yara_x_capi")]
         public static extern YRX_RESULT yrx_scanner_on_matching_rule(IntPtr scanner, YRX_RULE_CALLBACK callback);
 
         [DllImport("yara_x_capi")]
